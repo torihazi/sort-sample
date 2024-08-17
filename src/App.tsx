@@ -1,5 +1,11 @@
+import { Table } from "./Table";
+
 function App() {
-  return <>home</>;
+  return (
+    <>
+      <Table />
+    </>
+  );
 }
 
 export default App;
