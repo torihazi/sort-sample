@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { User } from "./types/user";
 import { FaSort } from "react-icons/fa";
 
-export const Table = () => {
-  const [users, setUsers] = useState<User[]>([]);
+type TableProps = {
+  users: User[];
+  email: User["email"];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+};
+
+export const Table = ({ users, setUsers, email }: TableProps) => {
   const [isIdSort, setIsIdSort] = useState<boolean>(false);
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -21,6 +26,10 @@ export const Table = () => {
 
   const handleClickIdSort = () => setIsIdSort((prev) => !prev);
 
+  const filteredUsers = [...users].filter((user) =>
+    user.email?.includes(email)
+  );
+
   return (
     <table className="table-auto">
       <thead>
@@ -37,14 +46,20 @@ export const Table = () => {
         </tr>
       </thead>
       <tbody>
-        {users.map((user) => (
-          <tr key={user.name}>
-            <td>{user.id}</td>
-            <td>{user.name}</td>
-            <td>{user.username}</td>
-            <td>{user.email}</td>
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <tr key={user.name}>
+              <td>{user.id}</td>
+              <td>{user.name}</td>
+              <td>{user.username}</td>
+              <td>{user.email}</td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td>結果なし</td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   );
